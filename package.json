@@ -1,0 +1,26 @@
+{
+	"name": "bbcode-parser",
+	"version": "1.0.0",
+	"scripts": {
+		"test": "nodeunit-esm -r",
+		"generate-docs": "jsdoc --configure .jsdoc.json --verbose"
+	},
+	"devDependencies": {
+		"docdash": "^1.2.0",
+		"eslint": "^7.0.0",
+		"jsdoc": "^3.6.6",
+		"nodeunit-esm": "^1.0.1"
+	},
+	"description": "Tiny BBCode JavaScript implementation",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/thoughtsunificator/bbcode-parser.git"
+	},
+	"bugs": {
+		"url": "https://github.com/thoughtsunificator/bbcode-parser/issues"
+	},
+	"author": "Romain Lebesle <oss@thoughtsunificator.me> (https://thoughtsunificator.me)",
+	"license": "MIT",
+	"main": "index.js",
+	"type": "module"
+}
