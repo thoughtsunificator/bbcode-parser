@@ -8,19 +8,12 @@ If you wish to convert BBCode to HTML or HTML to BBCode see [bbcode-parser-templ
 
 ### Installing
 
-#### Browser
-
-- ``git submodule add https://github.com/thoughtsunificator/bbcode-parser lib/bbcode-parser``
-
-#### Node.js
-
-- ``npm install  @thoughtsunificator/bbcode-parser``
--  Add ``type: "module"`` to your package.json.
+- ``npm install  bbcode-parser``
 
 ### Usage
 
 ````javascript
-import { Parser } from '@thoughtsunificator/bbcode-parser' // or ./lib/bbcode-parser/index.js
+import { Parser } from 'bbcode-parser'
 
 const bbDocument = Parser.parse("[b]Hey, thanks![/b]") // return a BBDocument instance
 
