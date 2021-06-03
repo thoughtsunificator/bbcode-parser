@@ -6,6 +6,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      - name: git-checkout
         uses: actions/checkout@v2
 
       - name: Install all dependencies
