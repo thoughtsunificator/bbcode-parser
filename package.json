@@ -1,6 +1,7 @@
 {
 	"name": "@thoughtsunificator/bbcode-parser",
-	"version": "1.0.1",
+	"version": "1.0.2",
+	"main": "index.js",
 	"scripts": {
 		"test": "nodeunit-esm -r",
 		"generate-docs": "jsdoc --configure .jsdoc.json --verbose"
