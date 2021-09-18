@@ -1,9 +1,12 @@
+import assert from "assert"
 import { Util } from "../index.js"
 
-export function insertText(test) {
-	test.expect(1)
+describe("util", () => {
 
-	test.strictEqual("Bonjour test, comment allez-vous ?", Util.insertText("Bonjour , comment allez-vous ?", "test", 8))
+	it("insertText", () => {
 
-	test.done()
-}
+		assert.strictEqual("Bonjour test, comment allez-vous ?", Util.insertText("Bonjour , comment allez-vous ?", "test", 8))
+
+	})
+
+})

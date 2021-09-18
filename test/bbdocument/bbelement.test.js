@@ -1,168 +1,157 @@
+import assert from "assert"
 import { BBDocument, BBNode } from "../../index.js"
 
 const bbDocument = new BBDocument()
 
-export function appendChild(test) {
-	test.expect(15)
+describe("bbelement", () => {
 
-	const bbElement = bbDocument.createElement("quote")
-	const bbText = bbDocument.createTextNode("Hello World")
-	const bbElement3 = bbDocument.createElement("b")
-	const bbElement4 = bbDocument.createElement("i")
+	it("appendChild", () => {
 
-	bbElement.appendChild(bbText)
-	bbElement.appendChild(bbElement3)
-	bbElement3.appendChild(bbElement4)
+		const bbElement = bbDocument.createElement("quote")
+		const bbText = bbDocument.createTextNode("Hello World")
+		const bbElement3 = bbDocument.createElement("b")
+		const bbElement4 = bbDocument.createElement("i")
 
-	test.strictEqual(bbElement.tagName, "quote")
+		bbElement.appendChild(bbText)
+		bbElement.appendChild(bbElement3)
+		bbElement3.appendChild(bbElement4)
 
-	test.strictEqual(bbElement.childNodes[0].nodeType, BBNode.TEXT_BBNODE)
-	test.strictEqual(bbElement.childNodes[0].parentNode, bbElement)
-	test.strictEqual(bbElement.childNodes[0].previousSibling, null)
-	test.strictEqual(bbElement.childNodes[0].nextSibling, bbElement.childNodes[1])
-	test.strictEqual(bbElement.childNodes[0].textContent, "Hello World")
+		assert.strictEqual(bbElement.tagName, "quote")
 
-	test.strictEqual(bbElement.childNodes[1].tagName, "b")
-	test.strictEqual(bbElement.childNodes[1].parentNode, bbElement)
-	test.strictEqual(bbElement.childNodes[1].previousSibling, bbElement.childNodes[0])
-	test.strictEqual(bbElement.childNodes[1].nextSibling, null)
-	test.strictEqual(bbElement.childNodes[1].nodeType, BBNode.ELEMENT_BBNODE)
+		assert.strictEqual(bbElement.childNodes[0].nodeType, BBNode.TEXT_BBNODE)
+		assert.strictEqual(bbElement.childNodes[0].parentNode, bbElement)
+		assert.strictEqual(bbElement.childNodes[0].previousSibling, null)
+		assert.strictEqual(bbElement.childNodes[0].nextSibling, bbElement.childNodes[1])
+		assert.strictEqual(bbElement.childNodes[0].textContent, "Hello World")
 
-	test.strictEqual(bbElement.childNodes[1].childNodes[0].tagName, "i")
-	test.strictEqual(bbElement.childNodes[1].childNodes[0].parentNode, bbElement.childNodes[1])
-	test.strictEqual(bbElement.childNodes[1].childNodes[0].previousSibling, null)
-	test.strictEqual(bbElement.childNodes[1].childNodes[0].nextSibling, null)
+		assert.strictEqual(bbElement.childNodes[1].tagName, "b")
+		assert.strictEqual(bbElement.childNodes[1].parentNode, bbElement)
+		assert.strictEqual(bbElement.childNodes[1].previousSibling, bbElement.childNodes[0])
+		assert.strictEqual(bbElement.childNodes[1].nextSibling, null)
+		assert.strictEqual(bbElement.childNodes[1].nodeType, BBNode.ELEMENT_BBNODE)
 
-	test.done()
-}
+		assert.strictEqual(bbElement.childNodes[1].childNodes[0].tagName, "i")
+		assert.strictEqual(bbElement.childNodes[1].childNodes[0].parentNode, bbElement.childNodes[1])
+		assert.strictEqual(bbElement.childNodes[1].childNodes[0].previousSibling, null)
+		assert.strictEqual(bbElement.childNodes[1].childNodes[0].nextSibling, null)
 
-export function removeChild(test) {
-	test.expect(8)
+	})
 
-	const bbElement = bbDocument.createElement("quote")
-	const bbElement1 = bbDocument.createElement("s")
-	const bbText = bbDocument.createTextNode("Hello World")
-	const bbElement2 = bbDocument.createElement("i")
-	const bbElement3 = bbDocument.createElement("d")
-	bbElement.appendChild(bbElement1)
-	bbElement.appendChild(bbText)
-	test.ok(bbText.nextSibling === null)
-	bbElement.appendChild(bbElement2)
-	test.strictEqual(bbText.nextSibling.outerBBCode, bbElement2.outerBBCode)
-	bbElement.appendChild(bbElement3)
-	test.strictEqual(bbText.nextSibling.outerBBCode, bbElement2.outerBBCode)
-	bbElement.removeChild(bbElement2)
-	test.strictEqual(bbText.nextSibling.outerBBCode, bbElement3.outerBBCode)
+	it("removeChild", () => {
 
-	test.strictEqual(bbText.nextSibling.outerBBCode, bbElement3.outerBBCode)
-	test.strictEqual(bbElement3.previousSibling.outerBBCode, bbText.outerBBCode)
-	test.strictEqual(bbText.previousSibling.outerBBCode, bbElement1.outerBBCode)
-	test.strictEqual(bbText.parentNode.childNodes[bbText.parentNode.childNodes.length - 1].outerBBCode, bbElement3.outerBBCode)
+		const bbElement = bbDocument.createElement("quote")
+		const bbElement1 = bbDocument.createElement("s")
+		const bbText = bbDocument.createTextNode("Hello World")
+		const bbElement2 = bbDocument.createElement("i")
+		const bbElement3 = bbDocument.createElement("d")
+		bbElement.appendChild(bbElement1)
+		bbElement.appendChild(bbText)
+		assert.ok(bbText.nextSibling === null)
+		bbElement.appendChild(bbElement2)
+		assert.strictEqual(bbText.nextSibling.outerBBCode, bbElement2.outerBBCode)
+		bbElement.appendChild(bbElement3)
+		assert.strictEqual(bbText.nextSibling.outerBBCode, bbElement2.outerBBCode)
+		bbElement.removeChild(bbElement2)
+		assert.strictEqual(bbText.nextSibling.outerBBCode, bbElement3.outerBBCode)
 
-	bbElement.removeChild(bbText)
-	bbElement.removeChild(bbElement2)
+		assert.strictEqual(bbText.nextSibling.outerBBCode, bbElement3.outerBBCode)
+		assert.strictEqual(bbElement3.previousSibling.outerBBCode, bbText.outerBBCode)
+		assert.strictEqual(bbText.previousSibling.outerBBCode, bbElement1.outerBBCode)
+		assert.strictEqual(bbText.parentNode.childNodes[bbText.parentNode.childNodes.length - 1].outerBBCode, bbElement3.outerBBCode)
 
-	test.done()
-}
+		bbElement.removeChild(bbText)
+		bbElement.removeChild(bbElement2)
 
-export function textContent(test) {
-	test.expect(4)
+	})
 
-	const bbElement = bbDocument.createElement("quote")
-	const bbText = bbDocument.createTextNode("Hello World")
-	const bbElement3 = bbDocument.createElement("b")
-	const bbElement4 = bbDocument.createElement("i")
-	bbElement.appendChild(bbText)
-	bbElement.appendChild(bbElement3)
-	bbElement3.appendChild(bbElement4)
-	test.strictEqual(bbElement.textContent, "Hello World")
-	bbElement3.textContent = "Foo"
-	test.strictEqual(bbElement.textContent, "Hello WorldFoo")
-	bbElement.textContent = "Hello World"
-	test.strictEqual(bbElement.childNodes.length, 1)
-	test.strictEqual(bbElement.childNodes[0].nodeType, BBNode.TEXT_BBNODE)
+	it("textContent", () => {
 
-	test.done()
-}
+		const bbElement = bbDocument.createElement("quote")
+		const bbText = bbDocument.createTextNode("Hello World")
+		const bbElement3 = bbDocument.createElement("b")
+		const bbElement4 = bbDocument.createElement("i")
+		bbElement.appendChild(bbText)
+		bbElement.appendChild(bbElement3)
+		bbElement3.appendChild(bbElement4)
+		assert.strictEqual(bbElement.textContent, "Hello World")
+		bbElement3.textContent = "Foo"
+		assert.strictEqual(bbElement.textContent, "Hello WorldFoo")
+		bbElement.textContent = "Hello World"
+		assert.strictEqual(bbElement.childNodes.length, 1)
+		assert.strictEqual(bbElement.childNodes[0].nodeType, BBNode.TEXT_BBNODE)
 
-export function innerBBCode(test) {
-	test.expect(9)
+	})
 
-	const bbElement = bbDocument.createElement("s")
-	const bbText = bbDocument.createTextNode("Hello World")
-	const bbElement3 = bbDocument.createElement("b")
-	const bbElement4 = bbDocument.createElement("i")
-	bbElement.appendChild(bbText)
-	bbElement.appendChild(bbElement3)
-	bbElement3.appendChild(bbElement4)
-	test.strictEqual(bbElement.innerBBCode, "Hello World[b][i][/i][/b]")
-	bbElement.innerBBCode = "[quote=hello xzc=test]test[/quote]"
-	test.strictEqual(bbElement.childNodes.length, 1)
-	test.strictEqual(bbElement.childNodes[0].nodeType, BBNode.ELEMENT_BBNODE)
-	test.strictEqual(bbElement.childNodes[0].keys.size, 2)
-	test.strictEqual(bbElement.childNodes[0].keys.get("quote"), "hello")
-	test.ok(bbElement.childNodes[0].keys.has("xzc"))
-	test.strictEqual(bbElement.childNodes[0].keys.get("xzc"), "test")
-	test.strictEqual(bbElement.childNodes[0].childNodes.length, 1)
-	test.strictEqual(bbElement.childNodes[0].childNodes[0].nodeType, BBNode.TEXT_BBNODE)
+	it("innerBBCode", () => {
 
-	test.done()
-}
+		const bbElement = bbDocument.createElement("s")
+		const bbText = bbDocument.createTextNode("Hello World")
+		const bbElement3 = bbDocument.createElement("b")
+		const bbElement4 = bbDocument.createElement("i")
+		bbElement.appendChild(bbText)
+		bbElement.appendChild(bbElement3)
+		bbElement3.appendChild(bbElement4)
+		assert.strictEqual(bbElement.innerBBCode, "Hello World[b][i][/i][/b]")
+		bbElement.innerBBCode = "[quote=hello xzc=test]test[/quote]"
+		assert.strictEqual(bbElement.childNodes.length, 1)
+		assert.strictEqual(bbElement.childNodes[0].nodeType, BBNode.ELEMENT_BBNODE)
+		assert.strictEqual(bbElement.childNodes[0].keys.size, 2)
+		assert.strictEqual(bbElement.childNodes[0].keys.get("quote"), "hello")
+		assert.ok(bbElement.childNodes[0].keys.has("xzc"))
+		assert.strictEqual(bbElement.childNodes[0].keys.get("xzc"), "test")
+		assert.strictEqual(bbElement.childNodes[0].childNodes.length, 1)
+		assert.strictEqual(bbElement.childNodes[0].childNodes[0].nodeType, BBNode.TEXT_BBNODE)
 
-export function outerBBCode(test) {
-	test.expect(1)
-	const bbElement = bbDocument.createElement("quote")
-	const bbText = bbDocument.createTextNode("Hello World")
-	const bbElement3 = bbDocument.createElement("b")
-	const bbElement4 = bbDocument.createElement("i")
-	// [quote]Hello World[b][i][/i][/b][/quote]
-	bbElement.appendChild(bbText)
-	bbElement.appendChild(bbElement3)
-	bbElement3.appendChild(bbElement4)
-	test.strictEqual(bbElement.outerBBCode, "[quote]Hello World[b][i][/i][/b][/quote]")
+	})
 
-	test.done()
-}
+	it("outerBBCode", () => {
+			const bbElement = bbDocument.createElement("quote")
+		const bbText = bbDocument.createTextNode("Hello World")
+		const bbElement3 = bbDocument.createElement("b")
+		const bbElement4 = bbDocument.createElement("i")
+		// [quote]Hello World[b][i][/i][/b][/quote]
+		bbElement.appendChild(bbText)
+		bbElement.appendChild(bbElement3)
+		bbElement3.appendChild(bbElement4)
+		assert.strictEqual(bbElement.outerBBCode, "[quote]Hello World[b][i][/i][/b][/quote]")
 
-export function tags(test) {
-	test.expect(5)
+	})
 
-	const bbElement = bbDocument.createElement("color", "#ffffff")
+	it("tags", () => {
 
-	const tags = bbElement.tags()
+		const bbElement = bbDocument.createElement("color", "#ffffff")
 
-	test.strictEqual(Object.keys(tags).length, 2)
-	test.ok(Object.hasOwnProperty.call(tags, "opening"))
-	test.ok(Object.hasOwnProperty.call(tags, "closing"))
-	test.strictEqual(tags.opening, "[color=#ffffff]")
-	test.strictEqual(tags.closing, "[/color]")
+		const tags = bbElement.tags()
 
-	test.done()
-}
+		assert.strictEqual(Object.keys(tags).length, 2)
+		assert.ok(Object.hasOwnProperty.call(tags, "opening"))
+		assert.ok(Object.hasOwnProperty.call(tags, "closing"))
+		assert.strictEqual(tags.opening, "[color=#ffffff]")
+		assert.strictEqual(tags.closing, "[/color]")
 
-export function querySelector(test) {
-	test.expect(4)
+	})
 
-	const bbElement = bbDocument.createElement("test")
-	bbElement.innerBBCode = "[v][t][/t][/v]"
+	it("querySelector", () => {
 
-	test.strictEqual(bbElement.querySelector(""), null)
-	test.strictEqual(bbElement.querySelector("cxzcxz"), null)
-	test.strictEqual(bbElement.querySelector("v").tagName, "v")
-	test.strictEqual(bbElement.querySelector("t").tagName, "t")
+		const bbElement = bbDocument.createElement("test")
+		bbElement.innerBBCode = "[v][t][/t][/v]"
 
-	test.done()
-}
+		assert.strictEqual(bbElement.querySelector(""), null)
+		assert.strictEqual(bbElement.querySelector("cxzcxz"), null)
+		assert.strictEqual(bbElement.querySelector("v").tagName, "v")
+		assert.strictEqual(bbElement.querySelector("t").tagName, "t")
 
-export function querySelectorAll(test) {
-	test.expect(3)
+	})
 
-	const bbElement = bbDocument.createElement("test")
-	bbElement.innerBBCode = "[v][t][t][v][t][/t][/v][/t][/t][/v]"
+	it("querySelectorAll", () => {
 
-	test.strictEqual(bbElement.querySelectorAll("").length, 0)
-	test.strictEqual(bbElement.querySelectorAll("vvcxv").length, 0)
-	test.strictEqual(bbElement.querySelectorAll("t").length, 3)
+		const bbElement = bbDocument.createElement("test")
+		bbElement.innerBBCode = "[v][t][t][v][t][/t][/v][/t][/t][/v]"
 
-	test.done()
-}
+		assert.strictEqual(bbElement.querySelectorAll("").length, 0)
+		assert.strictEqual(bbElement.querySelectorAll("vvcxv").length, 0)
+		assert.strictEqual(bbElement.querySelectorAll("t").length, 3)
+
+	})
+
+})

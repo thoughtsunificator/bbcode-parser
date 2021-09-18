@@ -3,14 +3,14 @@
 	"version": "1.0.3",
 	"main": "index.js",
 	"scripts": {
-		"test": "nodeunit-esm -r",
+		"test": "mocha test/**",
 		"generate-docs": "jsdoc --configure .jsdoc.json --verbose"
 	},
 	"devDependencies": {
 		"docdash": "^1.2.0",
 		"eslint": "^7.0.0",
 		"jsdoc": "^3.6.6",
-		"nodeunit-esm": "^1.0.2"
+		"mocha": "^9.1.1"
 	},
 	"description": "Tiny BBCode JavaScript implementation",
 	"repository": {
