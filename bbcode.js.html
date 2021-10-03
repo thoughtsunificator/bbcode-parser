@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>bbcode.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/thoughtsunificator/bbcode-parser" target="_blank" >Github</a></h2><h3>Classes</h3><ul><li><a href="module-bbdocument_bbdocument.BBDocument.html">BBDocument</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTextNode">createTextNode</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createElement">createElement</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTreeWalker">createTreeWalker</a></li></ul></li><li><a href="module-bbdocument_bbelement.BBElement.html">BBElement</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#appendChild">appendChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#removeChild">removeChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#tags">tags</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelector">querySelector</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelectorAll">querySelectorAll</a></li></ul></li><li><a href="module-bbdocument_bbnode.BBNode.html">BBNode</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbnode.BBNode.html#cloneNode">cloneNode</a></li></ul></li><li><a href="module-bbdocument_bbtext.BBText.html">BBText</a></li><li><a href="module-bbdocument_treewalker.TreeWalker.html">TreeWalker</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_treewalker.TreeWalker.html#parentNode">parentNode</a></li></ul></li><li><a href="module-token_key-Key.html">Key</a></li><li><a href="module-token_tagtoken-TagToken.html">TagToken</a></li><li><a href="module-token_texttoken-TextToken.html">TextToken</a></li><li><a href="module-token_token-Token.html">Token</a></li></ul><h3>Modules</h3><ul><li><a href="module-bbcode.html">bbcode</a><ul class='methods'><li data-type='method'><a href="module-bbcode.html#~keysToTags">keysToTags</a></li><li data-type='method'><a href="module-bbcode.html#~bbcode">bbcode</a></li><li data-type='method'><a href="module-bbcode.html#~html">html</a></li></ul></li><li><a href="module-bbdocument_bbdocument.html">bbdocument/bbdocument</a></li><li><a href="module-bbdocument_bbelement.html">bbdocument/bbelement</a></li><li><a href="module-bbdocument_bbnode.html">bbdocument/bbnode</a></li><li><a href="module-bbdocument_bbtext.html">bbdocument/bbtext</a></li><li><a href="module-bbdocument_treewalker.html">bbdocument/treewalker</a></li><li><a href="module-parser.html">parser</a><ul class='methods'><li data-type='method'><a href="module-parser.html#~serialize">serialize</a></li><li data-type='method'><a href="module-parser.html#~tokenize">tokenize</a></li><li data-type='method'><a href="module-parser.html#~parse">parse</a></li></ul></li><li><a href="module-token_key.html">token/key</a></li><li><a href="module-token_tagtoken.html">token/tagtoken</a></li><li><a href="module-token_texttoken.html">token/texttoken</a></li><li><a href="module-token_token.html">token/token</a></li><li><a href="module-tokenizer.html">tokenizer</a><ul class='methods'><li data-type='method'><a href="module-tokenizer.html#~tokenize">tokenize</a></li></ul></li><li><a href="module-util.html">util</a><ul class='methods'><li data-type='method'><a href="module-util.html#~insertText">insertText</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">bbcode.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module bbcode */
+
+import * as Parser from "./parser.js"
+import * as Util from "./util.js"
+
+/**
+ * Converts an array of keys into a tag object
+ * @param   {Object[]} keys
+ * @param   {string}   keys.name
+ * @param   {string}   keys.value
+ * @returns {object}
+ */
+function keysToTags(keys) {
+	const tags = {opening: "", closing: ""}
+	tags.opening += "["
+	keys.forEach((key, index) => {
+		if (index >= 1) {
+			tags.opening += " "
+		}
+		tags.opening += key.name
+		if (key.value !== null) {
+			if (key.value.includes(" ") === true) {
+				tags.opening += "=" + "\"" + key.value + "\""
+			} else {
+				tags.opening += "=" + key.value
+			}
+		}
+	})
+	tags.opening += "]"
+	tags.closing = "[/" + keys[0].name + "]"
+	return tags
+}
+
+/**
+ * Converts HTML to BBCode
+ * @param   {string} input         HTML string to be converted into BBCode
+ * @param   {string} templateName  The name of the BBCode template
+ * @returns {string}               The BBCode output
+ */
+function bbcode(input, template) {
+	const element = document.createElement("div")
+	element.innerHTML = input
+
+	const treeWalker = document.createTreeWalker(element)
+	const nodeList = []
+	while (treeWalker.nextNode()) {
+		nodeList.push(treeWalker.currentNode)
+	}
+
+	const ignoreList = []
+	const items = []
+	let output = ""
+
+	nodeList.forEach(node => {
+		if (ignoreList.indexOf(node) !== -1) {
+			return
+		}
+		let tags
+		let nodeOutput = ""
+		if (node.nodeType === Node.ELEMENT_NODE) {
+			let bbcode = template.keys.find(key => key.testNode(node) === true)
+			if (typeof bbcode === "object") {
+				if (typeof bbcode.updateIgnoreList === "function") {
+					bbcode.updateIgnoreList(ignoreList, node)
+				}
+				if (typeof bbcode.tags === "object") {
+					tags = bbcode.tags
+				}
+				else {
+					tags = keysToTags(bbcode.keys(node))
+				}
+				if (typeof bbcode.getStr === "function") {
+					nodeOutput = bbcode.getStr(bbcode.keys(node), node)
+				}
+				else {
+					nodeOutput = tags.opening + tags.closing
+				}
+			} else {
+				nodeOutput = node.outerHTML
+				let treeWalker2 = document.createTreeWalker(node)
+				while (treeWalker2.nextNode())
+					ignoreList.push(treeWalker2.currentNode)
+			}
+		} else if (node.nodeType === Node.TEXT_NODE) {
+				nodeOutput = node.textContent
+		}
+
+		const parent = items.find(item => item.node === node.parentNode)
+		const item = { node }
+
+		if (typeof parent === "undefined") {
+			output += nodeOutput
+			if (typeof tags === "object") {
+				item.childIndex = output.length - tags.closing.length
+			}
+		} else {
+			output = Util.insertText(output, nodeOutput, parent.childIndex)
+			const parents = []
+			let currentNode = node.parentNode
+			while (currentNode != null) {
+				parents.push(currentNode)
+				currentNode = currentNode.parentNode
+			}
+			parents.forEach(parentItem => {
+				const item2 = items.find(listItem => listItem.node === parentItem)
+				if (typeof item2 !== "undefined") {
+					item2.childIndex += nodeOutput.length
+				}
+			})
+			if (typeof tags === "object") {
+				item.childIndex = parent.childIndex - tags.closing.length
+			}
+		}
+		items.push(item)
+	})
+	return output
+}
+
+/**
+ * Converts BBCode to HTML
+ * Parse BBCode input into abstract tree made of tokens and turn them into nodes
+ * @param   {string} input         BBCode string to be converted into HTML
+ * @param   {Object} templateName  The name of the BBCode template
+ * @returns {string}               The HTML output
+ */
+function html(input, template) {
+	const elements = Parser.parse(input)
+	const element = document.createElement("div")
+	const items = []
+	elements.forEach(token => {
+		let node
+		if (token.name === "bbcode") {
+			const bbcode = template.keys.find(key => key.name === token.openingTag.keys[0].name)
+			if (typeof bbcode !== "undefined") {
+				node = bbcode.node(token.openingTag.keys, token)
+			}
+			else {
+				node = document.createTextNode(token.openingTag.buffer + token.closingTag.buffer)
+			}
+		} else {
+			node = document.createTextNode(token.buffer)
+		}
+		const parents = items.filter(parent => token.parents.includes(parent.bbcode))
+		if (parents.length >= 1) {
+			template.handleChildNode(node, token, items, parents)
+		}
+		else {
+			element.appendChild(node)
+		}
+		items.push({bbcode: token, node})
+	})
+	return element.innerHTML
+}
+
+export {
+	keysToTags,
+	bbcode,
+	html
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Oct 03 2021 13:19:14 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

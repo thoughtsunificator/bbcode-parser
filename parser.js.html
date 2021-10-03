@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>parser.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/thoughtsunificator/bbcode-parser" target="_blank" >Github</a></h2><h3>Classes</h3><ul><li><a href="module-bbdocument_bbdocument.BBDocument.html">BBDocument</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTextNode">createTextNode</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createElement">createElement</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTreeWalker">createTreeWalker</a></li></ul></li><li><a href="module-bbdocument_bbelement.BBElement.html">BBElement</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#appendChild">appendChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#removeChild">removeChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#tags">tags</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelector">querySelector</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelectorAll">querySelectorAll</a></li></ul></li><li><a href="module-bbdocument_bbnode.BBNode.html">BBNode</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbnode.BBNode.html#cloneNode">cloneNode</a></li></ul></li><li><a href="module-bbdocument_bbtext.BBText.html">BBText</a></li><li><a href="module-bbdocument_treewalker.TreeWalker.html">TreeWalker</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_treewalker.TreeWalker.html#parentNode">parentNode</a></li></ul></li><li><a href="module-token_key-Key.html">Key</a></li><li><a href="module-token_tagtoken-TagToken.html">TagToken</a></li><li><a href="module-token_texttoken-TextToken.html">TextToken</a></li><li><a href="module-token_token-Token.html">Token</a></li></ul><h3>Modules</h3><ul><li><a href="module-bbcode.html">bbcode</a><ul class='methods'><li data-type='method'><a href="module-bbcode.html#~keysToTags">keysToTags</a></li><li data-type='method'><a href="module-bbcode.html#~bbcode">bbcode</a></li><li data-type='method'><a href="module-bbcode.html#~html">html</a></li></ul></li><li><a href="module-bbdocument_bbdocument.html">bbdocument/bbdocument</a></li><li><a href="module-bbdocument_bbelement.html">bbdocument/bbelement</a></li><li><a href="module-bbdocument_bbnode.html">bbdocument/bbnode</a></li><li><a href="module-bbdocument_bbtext.html">bbdocument/bbtext</a></li><li><a href="module-bbdocument_treewalker.html">bbdocument/treewalker</a></li><li><a href="module-parser.html">parser</a><ul class='methods'><li data-type='method'><a href="module-parser.html#~serialize">serialize</a></li><li data-type='method'><a href="module-parser.html#~tokenize">tokenize</a></li><li data-type='method'><a href="module-parser.html#~parse">parse</a></li></ul></li><li><a href="module-token_key.html">token/key</a></li><li><a href="module-token_tagtoken.html">token/tagtoken</a></li><li><a href="module-token_texttoken.html">token/texttoken</a></li><li><a href="module-token_token.html">token/token</a></li><li><a href="module-tokenizer.html">tokenizer</a><ul class='methods'><li data-type='method'><a href="module-tokenizer.html#~tokenize">tokenize</a></li></ul></li><li><a href="module-util.html">util</a><ul class='methods'><li data-type='method'><a href="module-util.html#~insertText">insertText</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">parser.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module parser */
+
+import * as Tokenizer from "./tokenizer.js"
+import BBDocument from "./bbdocument/bbdocument.js"
+import BBNode from "./bbdocument/bbnode.js"
+import Token from "./token/token.js"
+import TagToken from "./token/tagtoken.js"
+
+/**
+ * @param  {Node}    rootNode
+ * @param  {object}  parameters
+ * @param  {boolean} parameters.excludeBBCode=false
+ * @param  {boolean} parameters.excludeRoot=true
+ * @returns {string}
+ */
+function serialize(rootNode, {excludeBBCode = false, excludeRoot = true} = {}) {
+	let str = ""
+	if(rootNode.nodeType === BBNode.ELEMENT_BBNODE) {
+		const tags = rootNode.tags()
+		let str_ = ""
+		for(const bbNode of rootNode.childNodes) {
+			str_ += serialize(bbNode, { excludeBBCode, excludeRoot: false })
+		}
+		if((!rootNode.ownerDocument || rootNode.ownerDocument.documentElement !== rootNode) &amp;&amp; excludeBBCode === false &amp;&amp; excludeRoot === false) {
+			str += `${tags.opening}${str_}${tags.closing}`
+		} else {
+			str += str_
+		}
+	} else {
+		str += rootNode.textContent
+	}
+	return str
+}
+
+/**
+ * @param  {string}   str
+ * @returns {Object[]}
+ */
+function tokenize(str) {
+	let tokens = Tokenizer.tokenize(str)
+	let openedCodeCount = 0
+	let raw = false
+	let rawTokens = []
+	tokens.filter(token => token.name === Token.NAME.OPENING_TAG || token.name === Token.NAME.CLOSING_TAG).forEach(function(token) {
+		if (token.name === Token.NAME.OPENING_TAG &amp;&amp; token.keys[0].name === "code") {
+			if (raw === true) {
+				rawTokens.push(token)
+				openedCodeCount++
+			} else {
+				raw = true
+			}
+		} else if (token.name === Token.NAME.CLOSING_TAG &amp;&amp; token.keys[0].name === "code") {
+			if (raw === true &amp;&amp; openedCodeCount === 0) {
+				rawTokens.forEach(function(token_) {
+					token_._name = Token.NAME.TEXT
+				})
+				raw = false
+				rawTokens = []
+			} else {
+				rawTokens.push(token)
+				if (openedCodeCount >= 1) {
+					openedCodeCount--
+				}
+			}
+		} else if (raw === true) {
+			rawTokens.push(token)
+		}
+	})
+	const openedTokens = []
+	const matchedTokens = []
+	tokens.filter(token => token.name === Token.NAME.OPENING_TAG || token.name === Token.NAME.CLOSING_TAG).forEach(token => {
+		if (token.name === Token.NAME.OPENING_TAG) {
+			if (token.keys[0].name === "*") {
+				const matches = openedTokens.filter(openedToken => openedToken.keys[0].name === "*")
+				if (matches.length >= 1) {
+					matchedTokens.push({
+						name: "bbcode",
+						bufferIndex: matches[matches.length - 1].bufferIndex,
+						openingTag: matches[matches.length - 1],
+						closingTag: new TagToken(Token.NAME.CLOSING_TAG, token.buffer, token.bufferIndex, token.keys),
+					})
+					openedTokens.splice(openedTokens.indexOf(matches[matches.length - 1]), 1)
+				}
+			}
+			openedTokens.push(token)
+		} else if (token.name === Token.NAME.CLOSING_TAG) {
+			if (token.keys[0].name === "list") {
+				const peers_ = openedTokens.filter(openedToken => openedToken.keys[0].name === "*")
+				if (peers_.length >= 1) {
+					matchedTokens.push({
+						name: "bbcode",
+						bufferIndex: peers_[peers_.length - 1].bufferIndex,
+						openingTag: peers_[peers_.length - 1],
+						closingTag: token,
+					})
+					openedTokens.splice(openedTokens.indexOf(peers_[peers_.length - 1]), 1)
+				}
+			}
+			const matches = openedTokens.filter(openedToken => openedToken.keys[0].name ===  token.keys[0].name)
+			if (matches.length >= 1 &amp;&amp; token.keys[0].name !== "*") {
+				openedTokens.splice(openedTokens.indexOf(matches[matches.length - 1]), 1)
+				matchedTokens.push({
+					name: "bbcode",
+					bufferIndex: matches[matches.length - 1].bufferIndex,
+					openingTag: matches[matches.length - 1],
+					closingTag: token
+				})
+			} else {
+				token._name = Token.NAME.TEXT
+			}
+		}
+	})
+	for(const token of openedTokens) {
+		token._name = Token.NAME.TEXT
+	}
+	let mergedTextToken = null
+	for (let i = 0; i &lt; tokens.length; i++) {
+		if (tokens[i].name === Token.NAME.TEXT) {
+			if (mergedTextToken === null) {
+				mergedTextToken = tokens[i]
+			} else {
+				mergedTextToken._buffer += tokens[i].buffer
+				tokens.splice(i, 1)
+				i--
+			}
+		} else {
+			mergedTextToken = null
+		}
+	}
+	tokens = matchedTokens.concat(tokens.filter(token => token.name === Token.NAME.TEXT))
+	tokens.sort((a, b) => a.bufferIndex - b.bufferIndex)
+	return tokens
+}
+
+/**
+ * @param   {string} 	   str The input text
+ * @returns {BBDocument}     An array of BBNode
+ */
+function parse(str) {
+	let tokens = tokenize(str)
+	const bbDocument = new BBDocument()
+	tokens = tokens.map(token => {
+		if(token.name === "bbcode") {
+			const keys = token.openingTag.keys
+			const bbNode = bbDocument.createElement(keys[0].name, keys[0].value)
+			keys.slice(1).forEach(key => bbNode.setKey(key.name, key.value))
+			token.bbNode = bbNode
+		} else if(token.name === Token.NAME.TEXT) {
+			token.bbNode = bbDocument.createTextNode(token.buffer)
+		}
+		return token
+	})
+	tokens.forEach(token => {
+		const parents = tokens.filter(token_ => token_.name === "bbcode" &amp;&amp; token_ !== token &amp;&amp; token_.bufferIndex &lt; token.bufferIndex &amp;&amp; token.bufferIndex &lt; token_.closingTag.bufferIndex)
+		if (parents.length >= 1) {
+			parents[parents.length - 1].bbNode.appendChild(token.bbNode)
+		} else {
+			bbDocument.documentElement.appendChild(token.bbNode)
+		}
+	})
+	return bbDocument
+}
+
+export {
+	serialize,
+	tokenize,
+	parse
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Oct 03 2021 13:19:14 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>

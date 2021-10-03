@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>bbdocument/bbnode.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/thoughtsunificator/bbcode-parser" target="_blank" >Github</a></h2><h3>Classes</h3><ul><li><a href="module-bbdocument_bbdocument.BBDocument.html">BBDocument</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTextNode">createTextNode</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createElement">createElement</a></li><li data-type='method'><a href="module-bbdocument_bbdocument.BBDocument.html#createTreeWalker">createTreeWalker</a></li></ul></li><li><a href="module-bbdocument_bbelement.BBElement.html">BBElement</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#appendChild">appendChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#removeChild">removeChild</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#tags">tags</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelector">querySelector</a></li><li data-type='method'><a href="module-bbdocument_bbelement.BBElement.html#querySelectorAll">querySelectorAll</a></li></ul></li><li><a href="module-bbdocument_bbnode.BBNode.html">BBNode</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_bbnode.BBNode.html#cloneNode">cloneNode</a></li></ul></li><li><a href="module-bbdocument_bbtext.BBText.html">BBText</a></li><li><a href="module-bbdocument_treewalker.TreeWalker.html">TreeWalker</a><ul class='methods'><li data-type='method'><a href="module-bbdocument_treewalker.TreeWalker.html#parentNode">parentNode</a></li></ul></li><li><a href="module-token_key-Key.html">Key</a></li><li><a href="module-token_tagtoken-TagToken.html">TagToken</a></li><li><a href="module-token_texttoken-TextToken.html">TextToken</a></li><li><a href="module-token_token-Token.html">Token</a></li></ul><h3>Modules</h3><ul><li><a href="module-bbcode.html">bbcode</a><ul class='methods'><li data-type='method'><a href="module-bbcode.html#~keysToTags">keysToTags</a></li><li data-type='method'><a href="module-bbcode.html#~bbcode">bbcode</a></li><li data-type='method'><a href="module-bbcode.html#~html">html</a></li></ul></li><li><a href="module-bbdocument_bbdocument.html">bbdocument/bbdocument</a></li><li><a href="module-bbdocument_bbelement.html">bbdocument/bbelement</a></li><li><a href="module-bbdocument_bbnode.html">bbdocument/bbnode</a></li><li><a href="module-bbdocument_bbtext.html">bbdocument/bbtext</a></li><li><a href="module-bbdocument_treewalker.html">bbdocument/treewalker</a></li><li><a href="module-parser.html">parser</a><ul class='methods'><li data-type='method'><a href="module-parser.html#~serialize">serialize</a></li><li data-type='method'><a href="module-parser.html#~tokenize">tokenize</a></li><li data-type='method'><a href="module-parser.html#~parse">parse</a></li></ul></li><li><a href="module-token_key.html">token/key</a></li><li><a href="module-token_tagtoken.html">token/tagtoken</a></li><li><a href="module-token_texttoken.html">token/texttoken</a></li><li><a href="module-token_token.html">token/token</a></li><li><a href="module-tokenizer.html">tokenizer</a><ul class='methods'><li data-type='method'><a href="module-tokenizer.html#~tokenize">tokenize</a></li></ul></li><li><a href="module-util.html">util</a><ul class='methods'><li data-type='method'><a href="module-util.html#~insertText">insertText</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">bbdocument/bbnode.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @module bbdocument/bbnode */
+
+import * as Parser from "../parser.js"
+import { BBElement, BBText } from "../../index.js"
+
+/**
+ * @memberof module:bbdocument/bbnode
+ */
+class BBNode {
+
+	/**
+	 * @readonly
+	 * @type {Number}
+	 */
+	static ELEMENT_BBNODE = 1
+	/**
+	 * @readonly
+	 * @type {Number}
+	 */
+	static TEXT_BBNODE = 2
+
+	constructor() {
+		this._ownerDocument = null
+		this._parentNode = null
+		this._previousSibling = null
+		this._nextSibling = null
+		this._textContent = ""
+	}
+
+	/**
+	 * @readonly
+	 * @type {BBElement}
+	 */
+	get ownerDocument() {
+		return this._ownerDocument
+	}
+
+	/**
+	 * @readonly
+	 * @type {BBElement}
+	 */
+	get parentNode() {
+		return this._parentNode
+	}
+
+	/**
+	 * @readonly
+	 * @type {BBNode}
+	 */
+	get previousSibling() {
+		return this._previousSibling
+	}
+
+	/**
+	 * @readonly
+	 * @type {BBNode}
+	 */
+	get nextSibling() {
+		return this._nextSibling
+	}
+
+	/**
+	 * @readonly
+	 * @type {number}
+	 */
+	get nodeType() {
+		return this._nodeType
+	}
+
+	/**
+	 * @type {string}
+	 */
+	get textContent() {
+		return this._textContent
+	}
+
+	set textContent(textContent) {
+		if(this.nodeType === BBNode.ELEMENT_BBNODE) {
+			for(let i = 0; i &lt; this.childNodes.length; i++) {
+				this.removeChild(this.childNodes[i])
+				i--
+			}
+			const bbText = Parser.parse(textContent).documentElement.childNodes[0]
+			this.appendChild(bbText)
+		}
+		this._textContent = textContent
+	}
+
+	remove() {
+		this.parentNode.removeChild(this)
+	}
+
+	/**
+	 * @param   {boolean} deep
+	 * @returns {BBNode}
+	 */
+	cloneNode(deep) {
+		let bbNode
+		if(this.nodeType === BBNode.ELEMENT_BBNODE) {
+			bbNode = new BBElement(this.tagName)
+			for(const [key, value] of this.keys) {
+				bbNode.setKey(key, value)
+			}
+			bbNode._keys = new Map(this.keys)
+			if(deep) {
+				bbNode.innerBBCode = this.innerBBCode
+			}
+		} else {
+			bbNode = new BBText(this.textContent)
+		}
+		return bbNode
+	}
+
+}
+
+export default BBNode
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Oct 03 2021 13:19:14 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+
+</body>
+</html>
