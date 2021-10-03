@@ -1,4 +1,4 @@
-# bbcode-parser [![Build Status](https://travis-ci.com/thoughtsunificator/bbcode-parser.svg?branch=master)](https://travis-ci.com/thoughtsunificator/bbcode-parser)
+# bbcode-parser
 
 bbcode-parser is a JavaScript implementation of the lightweight markup language [BBCode](https://en.wikipedia.org/wiki/BBCode).
 
