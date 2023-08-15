@@ -23,7 +23,7 @@ const text = bbDocument.documentElement.children[0].textContent // returns "Hey,
 
 ## API
 
-See [https://thoughtsunificator.github.io/bbcode-parser](https://thoughtsunificator.github.io/bbcode-parser).
+See [http://bbcode-parser.unificator.me](http://bbcode-parser.unificator.me).
 
 ## Try it out!
 
