@@ -51,7 +51,6 @@ describe("treewalker", () => {
 		assert.strictEqual(nodeList[13].textContent, "9")
 		assert.strictEqual(nodeList[14].textContent, "Test")
 
-
 	})
 
 	it("nextNode_", () => {
@@ -93,6 +92,20 @@ describe("treewalker", () => {
 		}
 		assert.strictEqual(nodeList.length, 15)
 		assert.deepEqual(nodeList.map(t => t.tagName || t.textContent), ["quote", "1", "quote", "2", "quote", "3", "quote", "4", "5", "6", "7", "8", "quote", "9", "Test"])
+
+	})
+
+	it("nextNode____", () => {
+
+		const bbDocument = Parser.parse("[quote]1[quote][/quote][quote][/quote][/quote]")
+
+		let treeWalker = new TreeWalker(bbDocument.documentElement.childNodes[0].childNodes[1])
+		let nodeList = []
+		while(treeWalker.nextNode()) {
+			nodeList.push(treeWalker.currentNode)
+		}
+		assert.strictEqual(nodeList.length, 0)
+
 
 	})
 

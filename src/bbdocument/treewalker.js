@@ -39,7 +39,9 @@ class TreeWalker {
 			if(previousNode !== this._rootNode) {
 				this._path.push(previousNode)
 			}
-		} else if(this.currentNode.nextSibling !== null  && !this._path.includes(this.currentNode.nextSibling)) {
+		} else if(this.currentNode.nextSibling !== null &&
+			(this._rootBookmark === this.currentNode.parentNode || this._path.includes(this.currentNode.parentNode)) &&
+			!this._path.includes(this.currentNode.nextSibling)) {
 			this._path.push(this.currentNode.nextSibling)
 			this._currentNode = this.currentNode.nextSibling
 		} else {
