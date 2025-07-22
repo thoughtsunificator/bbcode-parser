@@ -36,7 +36,7 @@ function serialize(rootNode, {excludeBBCode = false, excludeRoot = true} = {}) {
  * @param  {string}   str
  * @returns {Object[]}
  */
-function tokenize(str) {
+function tagTokens(str) {
 	let tokens = Tokenizer.tokenize(str)
 	let openedCodeCount = 0
 	let raw = false
@@ -137,7 +137,7 @@ function tokenize(str) {
  * @returns {BBDocument}     An array of BBNode
  */
 function parse(str) {
-	let tokens = tokenize(str)
+	let tokens = tagTokens(str)
 	const bbDocument = new BBDocument()
 	tokens = tokens.map(token => {
 		if(token.name === "bbcode") {
@@ -163,6 +163,6 @@ function parse(str) {
 
 export {
 	serialize,
-	tokenize,
+	tagTokens,
 	parse
 }

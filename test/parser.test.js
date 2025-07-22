@@ -5,7 +5,7 @@ describe("parser", () => {
 
 	it("schema", () => {
 
-		const tokens = Parser.tokenize("a[a*][/a*]")
+		const tokens = Parser.tagTokens("a[a*][/a*]")
 		assert.strictEqual(tokens instanceof Array, true)
 		assert.strictEqual(tokens.length, 2)
 		assert.strictEqual(Object.keys(tokens[0]).length, 3)
@@ -42,59 +42,59 @@ describe("parser", () => {
 
 	it("text", () => {
 
-		assert.strictEqual(Parser.tokenize("This is some text")[0].buffer, "This is some text")
+		assert.strictEqual(Parser.tagTokens("This is some text")[0].buffer, "This is some text")
 
 	})
 
 
 	it("invalidTags", () => {
 
-		assert.strictEqual(Parser.tokenize("[u]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[u][u]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[/u]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[/u][/u]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[test={][/test]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[@][/@]")[0].name, Token.NAME.TEXT)
-		assert.strictEqual(Parser.tokenize("[test test=1  testt=\"2\"][/test]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[u]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[u][u]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[/u]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[/u][/u]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[test={][/test]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[@][/@]")[0].name, Token.NAME.TEXT)
+		assert.strictEqual(Parser.tagTokens("[test test=1  testt=\"2\"][/test]")[0].name, Token.NAME.TEXT)
 
 	})
 
 	it("keys", () => {
 
-		assert.strictEqual(Parser.tokenize("[color=#:/.rEd][/color]")[0].openingTag.keys[0].value, "#:/.rEd")
-		assert.strictEqual(Parser.tokenize("[list=1][/list]")[0].openingTag.keys[0].value, "1")
-		assert.strictEqual(Parser.tokenize("[url=http://localhost][/url]")[0].openingTag.keys[0].value, "http://localhost")
-		assert.strictEqual(Parser.tokenize("[url=\"http://localhost\"][/url]")[0].openingTag.keys[0].value, "http://localhost")
-		assert.strictEqual(Parser.tokenize("[url=\"http://localhost\"][/url]")[0].openingTag.keys[0].value, "http://localhost")
-		assert.strictEqual(Parser.tokenize("[test test=1][/test]")[0].openingTag.keys[1].value, "1")
-		assert.strictEqual(Parser.tokenize("[test test=1 testt=\"2\"]x[test]cvv[/test]xc[/test]")[0].openingTag.keys[2].name, "testt")
-		assert.strictEqual(Parser.tokenize("[test test=1 testt=\"2\"]test[test][test][/test][/test]sfd[/test]")[0].openingTag.keys[2].value, "2")
+		assert.strictEqual(Parser.tagTokens("[color=#:/.rEd][/color]")[0].openingTag.keys[0].value, "#:/.rEd")
+		assert.strictEqual(Parser.tagTokens("[list=1][/list]")[0].openingTag.keys[0].value, "1")
+		assert.strictEqual(Parser.tagTokens("[url=http://localhost][/url]")[0].openingTag.keys[0].value, "http://localhost")
+		assert.strictEqual(Parser.tagTokens("[url=\"http://localhost\"][/url]")[0].openingTag.keys[0].value, "http://localhost")
+		assert.strictEqual(Parser.tagTokens("[url=\"http://localhost\"][/url]")[0].openingTag.keys[0].value, "http://localhost")
+		assert.strictEqual(Parser.tagTokens("[test test=1][/test]")[0].openingTag.keys[1].value, "1")
+		assert.strictEqual(Parser.tagTokens("[test test=1 testt=\"2\"]x[test]cvv[/test]xc[/test]")[0].openingTag.keys[2].name, "testt")
+		assert.strictEqual(Parser.tagTokens("[test test=1 testt=\"2\"]test[test][test][/test][/test]sfd[/test]")[0].openingTag.keys[2].value, "2")
 
 	})
 
 	it("buffer", () => {
 
-		assert.strictEqual(Parser.tokenize("[b][i]Test[/b][/i]")[0].openingTag.buffer, "[b]")
-		assert.strictEqual(Parser.tokenize("[b][i test=1]Hello World[/i][/b]")[1].openingTag.buffer, "[i test=1]")
-		assert.strictEqual(Parser.tokenize("[b][i=2]Test[/b][/i]")[1].openingTag.buffer, "[i=2]")
-		assert.strictEqual(Parser.tokenize("[b=dsadsa test=1][i]Test[/b][/i]")[1].openingTag.buffer, "[i]")
-		assert.strictEqual(Parser.tokenize("[b][i]Test[/b][/i]")[0].closingTag.buffer, "[/b]")
-		assert.strictEqual(Parser.tokenize("[b][i]Test[/b][/i]")[1].closingTag.buffer, "[/i]")
+		assert.strictEqual(Parser.tagTokens("[b][i]Test[/b][/i]")[0].openingTag.buffer, "[b]")
+		assert.strictEqual(Parser.tagTokens("[b][i test=1]Hello World[/i][/b]")[1].openingTag.buffer, "[i test=1]")
+		assert.strictEqual(Parser.tagTokens("[b][i=2]Test[/b][/i]")[1].openingTag.buffer, "[i=2]")
+		assert.strictEqual(Parser.tagTokens("[b=dsadsa test=1][i]Test[/b][/i]")[1].openingTag.buffer, "[i]")
+		assert.strictEqual(Parser.tagTokens("[b][i]Test[/b][/i]")[0].closingTag.buffer, "[/b]")
+		assert.strictEqual(Parser.tagTokens("[b][i]Test[/b][/i]")[1].closingTag.buffer, "[/i]")
 
 	})
 
 	it("bufferIndex", () => {
 
-		assert.strictEqual(Parser.tokenize("test[b][/b]")[1].openingTag.bufferIndex, 4)
-		assert.strictEqual(Parser.tokenize("test[b][/b][test][/test]xoxo")[2].openingTag.bufferIndex, 11)
-		assert.strictEqual(Parser.tokenize("[b][i]Test[/b][/i]")[0].closingTag.bufferIndex, 10)
-		assert.strictEqual(Parser.tokenize("[b][i][e]Hello World[/e][/i][/b]")[2].closingTag.bufferIndex, 20)
+		assert.strictEqual(Parser.tagTokens("test[b][/b]")[1].openingTag.bufferIndex, 4)
+		assert.strictEqual(Parser.tagTokens("test[b][/b][test][/test]xoxo")[2].openingTag.bufferIndex, 11)
+		assert.strictEqual(Parser.tagTokens("[b][i]Test[/b][/i]")[0].closingTag.bufferIndex, 10)
+		assert.strictEqual(Parser.tagTokens("[b][i][e]Hello World[/e][/i][/b]")[2].closingTag.bufferIndex, 20)
 
 	})
 
 	it("code", () => {
 
-		const tokens = Parser.tokenize("[code][b][/b][i][/i]Test[code]test[/code][/code][b][/b]")
+		const tokens = Parser.tagTokens("[code][b][/b][i][/i]Test[code]test[/code][/code][b][/b]")
 		assert.strictEqual(tokens.length, 3)
 		assert.strictEqual(tokens[0].name, "bbcode")
 		assert.strictEqual(tokens[1].name, Token.NAME.TEXT)
@@ -104,7 +104,7 @@ describe("parser", () => {
 
 	it("list", () => {
 
-		const tokens = Parser.tokenize("[list][*]test[*][/list]")
+		const tokens = Parser.tagTokens("[list][*]test[*][/list]")
 
 		assert.strictEqual(tokens.length, 4)
 		assert.strictEqual(tokens[0].name, "bbcode")
